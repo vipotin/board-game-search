@@ -1,8 +1,24 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import useSWR from 'swr'
+
+const fetcher = (url) => fetch('https://api.boardgameatlas.com/api/search?order_by=rank&ascending=false&client_id=JLBr5npPhV').then((res) => res.json())
+
+// function Profile() {
+//   const { data, error } = useSWR('/api/user', fetcher)
+
+//   if (error) return <div>failed to load</div>
+//   if (!data) return <div>loading...</div>
+//   return <div>hello {data.name}!</div>
+// }
 
 export default function Home() {
+  const { data, error } = useSWR('/api/user', fetcher)
+  if (error) return <div>failed to load</div>
+  if (!data) return <div>loading...</div>
+  // var gameNameList = data.games.map(e => e.name)
+  console.log(data.games[2])
   return (
     <div className={styles.container}>
       <Head>
@@ -13,42 +29,21 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          Welcome to board game search!
         </h1>
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+        <div className={styles.list}>
+        {data.games.map(function(game, id){
+          return (
+            <div key={id}>
+              <h3 id="name">{game.name}</h3>
+              {/* <p>{game.description_preview}</p> */}
+              <Image id="cover" alt="game cover" width="200" height="200"src={game.image_url}></Image>
+              <p id="rating">Rating: {game.average_user_rating.toFixed(2)}</p>
+              <p id="learning-complexity">Learning complexity: {game.average_learning_complexity.toFixed(2)}</p>
+            </div>
+          )
+        })}
         </div>
       </main>
 
