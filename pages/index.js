@@ -1,24 +1,46 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import useSWR from 'swr'
+import GameList from './gameList'
+import { useState } from 'react'
+import { SWRConfig } from 'swr'
+import getCategories from './api/categories'
+import getGamesByCategory from './api/games'
 
-const fetcher = (url) => fetch('https://api.boardgameatlas.com/api/search?order_by=rank&ascending=false&client_id=JLBr5npPhV').then((res) => res.json())
+export async function getStaticProps() {
+  const categories = await getCategories()
+  return {
+    props: {
+      fallback: {
+        'categories': categories
+      }
+    }
+  }
+}
 
-// function Profile() {
-//   const { data, error } = useSWR('/api/user', fetcher)
+function Categorylist ({ categoryList, setGames, setCategory }) {
+  const fetchGames = async (category) => {
+    const games = await getGamesByCategory(category)
+    setGames(games)
+  }
 
-//   if (error) return <div>failed to load</div>
-//   if (!data) return <div>loading...</div>
-//   return <div>hello {data.name}!</div>
-// }
+  return (
+    <div className="gameCategory">
+      <label>Category</label><br></br>
+      <select id="category" onChange={(e) => { fetchGames(e.target.value) }}>
+        <option value="" disabled selected>Select category</option>
+        {categoryList.map(function(type, id){
+          return <option value={type.id} key={id}>{type.name}</option>
+        })}
+      </select>
+    </div>
+  )
+}
 
-export default function Home() {
-  const { data, error } = useSWR('/api/user', fetcher)
-  if (error) return <div>failed to load</div>
-  if (!data) return <div>loading...</div>
-  // var gameNameList = data.games.map(e => e.name)
-  console.log(data.games[2])
+export default function Home({ fallback }) {
+  const [games, setGames] = useState([])
+  const [category, setCategory] = useState("")
+    
   return (
     <div className={styles.container}>
       <Head>
@@ -31,20 +53,10 @@ export default function Home() {
         <h1 className={styles.title}>
           Welcome to board game search!
         </h1>
-
-        <div className={styles.list}>
-        {data.games.map(function(game, id){
-          return (
-            <div key={id}>
-              <h3 id="name">{game.name}</h3>
-              {/* <p>{game.description_preview}</p> */}
-              <Image id="cover" alt="game cover" width="200" height="200"src={game.image_url}></Image>
-              <p id="rating">Rating: {game.average_user_rating.toFixed(2)}</p>
-              <p id="learning-complexity">Learning complexity: {game.average_learning_complexity.toFixed(2)}</p>
-            </div>
-          )
-        })}
-        </div>
+        <SWRConfig value={{ fallback }}>
+          <Categorylist categoryList={ fallback.categories } setGames={setGames} setCategory={setCategory} />
+        </SWRConfig>
+        <GameList games={games}/>
       </main>
 
       <footer className={styles.footer}>
