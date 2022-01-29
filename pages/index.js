@@ -18,16 +18,11 @@ export async function getStaticProps() {
   }
 }
 
-function Categorylist ({ categoryList, setGames, setCategory }) {
-  const fetchGames = async (category) => {
-    const games = await getGamesByCategory(category)
-    setGames(games)
-  }
-
+function Categorylist ({ categoryList, setCategory }) {
   return (
     <div className="gameCategory">
       <label>Category</label><br></br>
-      <select id="category" onChange={(e) => { fetchGames(e.target.value) }}>
+      <select id="category" onChange={(e) => { setCategory(e.target.value) }}>
         <option value="" disabled selected>Select category</option>
         {categoryList.map(function(type, id){
           return <option value={type.id} key={id}>{type.name}</option>
@@ -56,7 +51,7 @@ export default function Home({ fallback }) {
         <SWRConfig value={{ fallback }}>
           <Categorylist categoryList={ fallback.categories } setGames={setGames} setCategory={setCategory} />
         </SWRConfig>
-        <GameList games={games}/>
+        <GameList category={category}/>
       </main>
 
       <footer className={styles.footer}>
