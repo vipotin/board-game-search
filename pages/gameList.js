@@ -1,9 +1,23 @@
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import useSWR from 'swr'
+import { useState } from 'react'
+import { useEffect } from 'react'
 
-function GameList({ games }) {
+function GameList({ category }) {
+  const [games, setGames] = useState([])
+  const address = `/api/games?category=${category}`
+  const fetcher = (url) => fetch(url).then((res) => res.json())
+  const { data } = useSWR(address, fetcher)
+  
+  useEffect(() => {
+    if (data) {
+      setGames(data.data.games)
+    }
+  }, [data]);
+
   if(!games) {
-    return <div></div>
+    return <p>Loading</p>
   }
   return (
     <div className={styles.list}>
