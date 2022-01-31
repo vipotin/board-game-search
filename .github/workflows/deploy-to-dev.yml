@@ -1,14 +1,14 @@
 name: "Deploy"
 
 on:
-  push:
+  pull_request:
     branches:
-      - main
+      - dev
 
 jobs:
   vercel: 
     runs-on: ubuntu-latest
-    name: "Deploy web app"
+    name: "Deploy to dev"
     
     steps:
       - uses: actions/checkout@v2
@@ -17,7 +17,7 @@ jobs:
           node-version: '14'
           registry-url: https://registry.npmjs.org/
 
-      - name: "Deploy to Vercel"
+      - name: "Deploy to Preview"
         run: npx vercel --token ${VERCEL_TOKEN}
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
