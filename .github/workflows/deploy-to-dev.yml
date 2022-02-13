@@ -23,7 +23,7 @@ jobs:
         id: pr-preview
         run: |
           npx vercel --token ${VERCEL_TOKEN}  > deployment-url.txt
-          echo "::set-output name=url::${cat deployment-url.txt}"
+          echo `::set-output name=url::$(cat deployment-url.txt)`
 
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
