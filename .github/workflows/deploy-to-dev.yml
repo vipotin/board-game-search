@@ -18,8 +18,27 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - name: "Deploy to Preview"
-        run: npx vercel --token ${VERCEL_TOKEN}
+        id: pr-preview
+        outputs:
+          url: ${{ steps.pr-preview.outputs.url }}
+        run: |
+          npx vercel --token ${VERCEL_TOKEN}  > deployment-url.txt
+          echo "::set-output name=url::${cat deployment-url.txt}"
+
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+
+    comment:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/github-script@v6
+          with:
+            script: |
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `Preview deployment URL: ${{ needs.vercel.outputs.url }}`
+              })
