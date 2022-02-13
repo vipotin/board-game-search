@@ -1,5 +1,4 @@
-name: "Deploy"
-
+name: "Deploy to Preview"
 on:
   pull_request:
     branches:
@@ -8,7 +7,7 @@ on:
 jobs:
   vercel: 
     runs-on: ubuntu-latest
-    name: "Deploy to dev"
+    name: "Deploy PR Preview"
     outputs:
       url: ${{ steps.pr-preview.outputs.url }}
     
