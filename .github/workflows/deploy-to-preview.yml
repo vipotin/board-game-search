@@ -47,7 +47,7 @@ jobs:
   #             body: `Preview deployment URL: ${{ needs.vercel.outputs.url }}`
   #           })
 
-    test:
+  test:
     runs-on: ubuntu-latest
     
     steps:
