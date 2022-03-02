@@ -58,10 +58,10 @@ jobs:
       uses: joonvena/robotframework-docker-action@v1.0
       # needs: vercel
       env:
-        DEMO_URL:   https://board-game-search-ten.vercel.app
+        HOME_PAGE:   https://board-game-search-ten.vercel.app
         BROWSER:    firefox
         TEST_DIR:   robot/e2e
       with:
         robot_tests_dir:   ${{ env.TEST_DIR }}
         robot_reports_dir: ${{ env.REPORT_DIR }}
-        robot_options:     "--variable BROWSER:${{ env.BROWSER }} --variable DEMO_URL:${{ env.DEMO_URL }}"
+        robot_options:     "--variable BROWSER:${{ env.BROWSER }} --variable HOME_PAGE:${{ env.DEMO_URL }}"
