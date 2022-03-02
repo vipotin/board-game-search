@@ -1,5 +1,5 @@
 *** Settings ***
-Resource       ../resources/home-page.resource
+Resource       ../../resources/home-page.resource
 Suite Setup    User opens browser
 
 
