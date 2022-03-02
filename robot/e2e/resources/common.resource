@@ -3,12 +3,12 @@ Library    Browser
 
 
 *** Variables ***
-${BROWSER}    chromium
+${BROWSER}    firefox
 
 
 *** Keywords ***
 User opens browser
-    Open Browser    ${BROWSER}
+    New Browser    ${BROWSER}
 
 User navigates to home page
     New Page    ${HOME_PAGE}
