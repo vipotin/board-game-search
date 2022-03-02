@@ -61,6 +61,7 @@ jobs:
         HOME_PAGE:   https://board-game-search-ten.vercel.app
         BROWSER:    firefox
         TEST_DIR:   robot/e2e
+        REPORT_DIR: robot/e2e/reports
       with:
         robot_tests_dir:   ${{ env.TEST_DIR }}
         robot_reports_dir: ${{ env.REPORT_DIR }}
@@ -71,4 +72,4 @@ jobs:
       if: always()
       with:
         name: reports
-        path: reports
+        path: robot/e2e/reports
