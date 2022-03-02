@@ -65,3 +65,10 @@ jobs:
         robot_tests_dir:   ${{ env.TEST_DIR }}
         robot_reports_dir: ${{ env.REPORT_DIR }}
         robot_options:     "--variable BROWSER:${{ env.BROWSER }} --variable HOME_PAGE:${{ env.DEMO_URL }}"
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v1
+      if: always()
+      with:
+        name: reports
+        path: reports
