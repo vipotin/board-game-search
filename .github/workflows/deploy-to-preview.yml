@@ -47,13 +47,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     name: Run E2E tests
+    needs: vercel
     
     steps:
     - uses: actions/checkout@v2
     
     - name: Execute robot tests
       uses: joonvena/robotframework-docker-action@v1.0
-      needs: vercel
       env:
         HOME_PAGE:  ${{ needs.vercel.outputs.url }}
         BROWSER:    firefox
