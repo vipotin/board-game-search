@@ -6,17 +6,23 @@
     "dev": "NODE_ENV=local next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest"
   },
   "dependencies": {
     "axios": "^0.25.0",
-    "next": "11.1.2",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
+    "next": "^12.1.5",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "source-map-resolve": "^0.6.0",
     "swr": "^1.0.1"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.1.1",
     "eslint": "8.1.0",
-    "eslint-config-next": "11.1.2"
+    "eslint-config-next": "11.1.2",
+    "jest": "^27.5.1",
+    "node-mocks-http": "^1.11.0"
   }
 }

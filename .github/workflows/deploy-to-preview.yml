@@ -17,6 +17,12 @@ jobs:
         with:
           node-version: '14'
           registry-url: https://registry.npmjs.org/
+      - name: Install modules
+        run: npm install
+      - name: Run unit tests
+        run: CI=true npm test
+        env:
+          CLIENT_ID: ${{ secrets.BG_API_KEY_TEST }}
 
       - name: "Deploy to Preview"
         id: pr-preview
@@ -43,3 +49,30 @@ jobs:
               repo: context.repo.repo,
               body: `Preview deployment URL: ${{ needs.vercel.outputs.url }}`
             })
+
+  test:
+    runs-on: ubuntu-latest
+    name: Run E2E tests
+    needs: vercel
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Execute robot tests
+      uses: joonvena/robotframework-docker-action@v1.0
+      env:
+        HOME_PAGE:  ${{ needs.vercel.outputs.url }}
+        BROWSER:    firefox
+        TEST_DIR:   robot/e2e
+        REPORT_DIR: robot/e2e/reports
+      with:
+        robot_tests_dir:   ${{ env.TEST_DIR }}
+        robot_reports_dir: ${{ env.REPORT_DIR }}
+        robot_options:     "--variable BROWSER:${{ env.BROWSER }} --variable HOME_PAGE:${{ env.HOME_PAGE }}"
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v1
+      if: always()
+      with:
+        name: reports
+        path: robot/e2e/reports
