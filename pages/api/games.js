@@ -11,6 +11,12 @@ const fields = [
 
 export default async function getGames(req, res) {
   const url = `${BASE_URL}/search?client_id=${CLIENT_ID}&categories=${req.query.category}&fields=${fields}`
-  const response = await axios.get(url)
-  return res.status(200).json({ data: response.data })
+  await axios
+    .get(url)
+    .then(({ data }) => {
+      res.status(200).json({ data })
+    })
+    .catch(({ err }) => {
+      res.status(400).json({ err })
+    })
 }
