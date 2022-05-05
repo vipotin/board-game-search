@@ -1,7 +1,8 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import GameList from './gameList'
+import GameList from './components/GameList'
+import CategoryList from './components/CategoryList'
 import { useState } from 'react'
 import { SWRConfig } from 'swr'
 import getCategories from './api/categories'
@@ -16,20 +17,6 @@ export async function getStaticProps() {
       }
     }
   }
-}
-
-function Categorylist ({ categoryList, setCategory }) {
-  return (
-    <div className="gameCategory">
-      <label>Category</label><br></br>
-      <select id="category" onChange={(e) => { setCategory(e.target.value) }}>
-        <option value="" disabled selected>Select category</option>
-        {categoryList.map(function(type, id){
-          return <option value={type.id} key={id}>{type.name}</option>
-        })}
-      </select>
-    </div>
-  )
 }
 
 export default function Home({ fallback }) {
@@ -49,7 +36,7 @@ export default function Home({ fallback }) {
           Welcome to board game search!
         </h1>
         <SWRConfig value={{ fallback }}>
-          <Categorylist categoryList={ fallback.categories } setGames={setGames} setCategory={setCategory} />
+          <CategoryList categoryList={ fallback.categories } setCategory={setCategory} />
         </SWRConfig>
         <GameList category={category}/>
       </main>
